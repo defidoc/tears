@@ -30,6 +30,17 @@ const config: HardhatUserConfig = {
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
+    bscmainnet: {
+      url: process.env.NODE_URI !== undefined ? process.env.NODE_URI : "",
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+    hardhat: {
+      forking: {
+        url: process.env.NODE_URI !== undefined ? process.env.NODE_URI : "",
+        //blockNumber: 16708100
+      }
+    },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,

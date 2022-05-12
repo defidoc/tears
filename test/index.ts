@@ -1,19 +1,23 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-describe("Greeter", function () {
-  it("Should return the new greeting once it's changed", async function () {
-    const Greeter = await ethers.getContractFactory("Greeter");
-    const greeter = await Greeter.deploy("Hello, world!");
-    await greeter.deployed();
+import { Tears } from "../typechain/Tears"
+import { TearsFaucet } from "../typechain/TearsFaucet"
 
-    expect(await greeter.greet()).to.equal("Hello, world!");
+describe("Tears", function () {
+  it("Should deploy the token", async function () {
+    const [owner, ...addrs] = await ethers.getSigners();
+    const Token = await ethers.getContractFactory("Tears")
+    const token:Tears = await Token.deploy()
+    await token.deployed();
 
-    const setGreetingTx = await greeter.setGreeting("Hola, mundo!");
+    const Faucet = await ethers.getContractFactory("TearsFaucet");
+    const faucet:TearsFaucet = await Faucet.deploy(token.address);
 
-    // wait until the transaction is mined
-    await setGreetingTx.wait();
+    console.log(await token.balanceOf(owner.address))
 
-    expect(await greeter.greet()).to.equal("Hola, mundo!");
+    await token.transfer(faucet.address, await token.balanceOf(owner.address));
+
+    await faucet.redeem("0x23396cF899Ca06c4472205fC903bDB4de249D6fC", ethers.utils.parseEther("1000"));    
   });
 });
