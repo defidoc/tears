@@ -22,9 +22,11 @@ async function main() {
   console.log("Token deployed to:", token.address);
 
   const Faucet = await ethers.getContractFactory("TearsFaucet");
-  const faucet = await Faucet.deploy(token.address);
+  const faucet = await Faucet.deploy(token.address,"0x23396cF899Ca06c4472205fC903bDB4de249D6fC", "0x156ab3346823B651294766e23e6Cf87254d68962");
 
   await faucet.deployed()
+
+  await token.transfer(faucet.address, (await token.totalSupply()).mul(95).div(100))
 
   console.log("Faucet deployed to: ", faucet.address);
 }
